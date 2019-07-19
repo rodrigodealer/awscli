@@ -19,6 +19,7 @@ func main() {
 	zone := flag.BoolP("zone", "z", false, "show availability-zone")
 	help := flag.BoolP("help", "h", false, "show help")
 	detailed := flag.BoolP("details", "d", false, "show all information")
+	onlineOnly := flag.BoolP("onlineonly", "o", false, "only online")
 	flag.Parse()
 
 	if *help {
@@ -74,7 +75,14 @@ func main() {
 						s = s + "\t" + *i.Placement.AvailabilityZone
 					}
 
-					fmt.Fprintln(b, s)
+					if *onlineOnly {
+						if *i.State.Name == "running" {
+							fmt.Fprintln(b, s)
+						}
+					} else {
+						fmt.Fprintln(b, s)
+					}
+
 				}
 			}
 		}
